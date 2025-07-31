@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Model Predictions</title>
+</head>
+<body>
+    <h1>Upload CSV to Get Predictions</h1>
+    <form action="/predict" id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="file-input" name="file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+    <br />
+    <div id="task-status"></div>
+    <br />
+    <div id="task-result"></div>
+
+    <script src="{{ url_for('static', filename='user_data.js') }}"></script>
+</body>
+</html>

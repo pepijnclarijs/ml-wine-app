@@ -1,0 +1,32 @@
+# For CI/CD:
+trigger:
+  branches:
+    include:
+      - production
+      - development
+
+pool:
+  name: local_agent  # Replace with your actual agent pool name
+
+variables:
+  branchName: $(Build.SourceBranchName)
+  dockerRegistryServiceConnection: 'wine-container-registry-svc'
+  imageRepository: 'pepijnclarijs/ml-wine-registry'
+  dockerfilePath: 'Dockerfile'
+  tag: '$(branchName)-$(Build.BuildId)'
+
+steps:
+- task: Docker@2
+  displayName: Build and push an image to Docker Hub
+  inputs:
+    containerRegistry: $(dockerRegistryServiceConnection)
+    repository: $(imageRepository)
+    command: buildAndPush
+    Dockerfile: $(dockerfilePath)
+    tags: |
+      latest
+#      $(tag)
+      
+
+- script: echo "Build and Push complete"
+  displayName: 'Confirm Docker Push'

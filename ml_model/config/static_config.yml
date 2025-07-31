@@ -1,0 +1,46 @@
+# This file contains the actual configuration values.
+package_name: random_wine_forest
+pipeline_name: random_forest_model
+pipeline_save_file: fitted_random_forest_pl
+
+features:
+  - FixedAcidity
+  - VolatileAcidity
+  - CitricAcid
+  - ResidualSugar
+  - Chlorides
+  - FreeSulfurDioxide
+  - TotalSulfurDioxide
+  - Density
+  - PH
+  - Sulphates
+  - Alcohol
+  - Color # Added to dataset
+
+target: Quality
+
+categorical_vars:
+  - Color
+
+numerical_vars:
+  - FixedAcidity
+  - VolatileAcidity
+  - CitricAcid
+  - ResidualSugar
+  - Chlorides
+  - FreeSulfurDioxide
+  - TotalSulfurDioxide
+  - Density
+  - PH
+  - Sulphates
+  - Alcohol
+
+test_size: 0.1
+
+random_state: 6
+
+n_estimators: 500
+
+training_data_file_names:
+  - winequality-red.csv
+  - winequality-white.csv
