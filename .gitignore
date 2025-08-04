@@ -2,3 +2,6 @@
 *.pkl
 *.infracost
 *.terraform
+
+__pycache__/
+*.pyc
