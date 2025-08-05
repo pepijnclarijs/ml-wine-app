@@ -1,5 +1,7 @@
-""" This file contains the logic for loading, parsing, and validating the configuration data. Pydantics BaseModel is
-used to define the structure and validate the structure of the configuration data."""
+""" 
+This file contains the logic for loading, parsing, and validating the configuration data. Pydantics 
+BaseModel is used to define the structure and validate the structure of the configuration data.
+"""
 
 from pathlib import Path
 from pydantic import BaseModel

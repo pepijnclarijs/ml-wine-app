@@ -1,8 +1,8 @@
+from dataclasses import dataclass
 import logging
 import os
 import pandas as pd
 import threading
-from dataclasses import dataclass
 from typing import Union
 from ml_model.config.dynamic_config import config
 from ml_model import __version__ as package_version
@@ -26,12 +26,13 @@ def predict(input_data: Union[pd.DataFrame, dict]) -> dict:
     # Make predictions
     logging.info("loading the pipeline...")
     pipeline = load_pipeline()
-    logging.info("loading the pipeline -- DONE")
+    logging.info("Pipeline loaded!")
+
     logging.info("Making predictions...")
     predictions = pipeline.predict(
         X=input_data[config.ml_model_config.features]
     )
-    logging.info("Making predictions -- DONE")
+    logging.info("Predictions have been made!")
 
     results = {
         "predictions": predictions.tolist(),
@@ -43,7 +44,6 @@ def predict(input_data: Union[pd.DataFrame, dict]) -> dict:
 
 @dataclass
 class TaskContext:
-    """Object containing information related to a task initiated by the API user."""
     task_id: str
     status_lock: threading.Lock
     processing_status: dict

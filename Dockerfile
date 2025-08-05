@@ -1,25 +1,26 @@
-# This dockerfile contains the specifications for creating a docker image. It is like a blueprint for the docker image.
-
-# Set Base Image.
+# Use slim Python base image
 FROM python:3.11-slim
 
-# Set working directory.
-WORKDIR /ML-wine-quality
+# Set working directory
+WORKDIR /ml-wine-app
 
-# Set environment variables
-ENV PYTHONPATH=/ML-wine-quality
+# Set environment variable for Python path
+ENV PYTHONPATH=/ml-wine-app
 
-# Copy the requirements.
-COPY requirements.txt .
+# Install uv package manager
+RUN pip install --no-cache-dir uv
 
-# Install requirements and do not save cache to reduce size.
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy project metadata files first (for better caching)
+COPY pyproject.toml uv.lock ./
 
-# Copy the rest of the application code into the container.
-COPY . /ML-wine-quality/
+# Install dependencies using uv (properly from lockfile)
+RUN uv sync --no-cache
 
-# Document which ports the app will use.
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port your API uses
 EXPOSE 80
 
 # Run the application
-CMD ["python", "api/main.py"]
+CMD ["uv", "run", "python", "api/main.py"]

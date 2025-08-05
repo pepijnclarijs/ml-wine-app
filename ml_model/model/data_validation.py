@@ -45,12 +45,12 @@ class WineDataBatchInputSchema(BaseModel):
 # Extract data and convert to DataFrame
 def convert_schema_to_dataframe(batch_schema: WineDataBatchInputSchema) -> pd.DataFrame:
     """
-    This function converts a WineDataBatchInputSchema into a pandas DataFrame. This ensures that the data used by
-    the model follows the right schema.
+    This function converts a WineDataBatchInputSchema into a pandas DataFrame. This ensures that the
+    data used by the model follows the right schema.
     """
 
     # Convert schema to list of dictionaries
-    data = [item.dict() for item in batch_schema.inputs]
+    data = [item.model_dump() for item in batch_schema.inputs]
 
     # Create DataFrame
     df = pd.DataFrame(data)
@@ -59,6 +59,7 @@ def convert_schema_to_dataframe(batch_schema: WineDataBatchInputSchema) -> pd.Da
 
 
 def process_user_input(input_data: pd.DataFrame) -> Tuple[pd.DataFrame, dict]:
+    """Cleans an validates the raw input data from the user."""
     input_data = clean_raw_data(input_data)
     valid_data, errors = validate_data(input_data)
 
@@ -67,9 +68,9 @@ def process_user_input(input_data: pd.DataFrame) -> Tuple[pd.DataFrame, dict]:
 
 def combine_clean_and_validate_wine_datasets(file_names: List[str]) -> Tuple[pd.DataFrame, dict]:
     """
-    Combines the white and red wine datasets, gets rid of rows containing missing values and formats the feature
-    names. Please note that since there are no missing values in the training data, I have opted to remove all rows
-    containing missing data.
+    Combines the white and red wine datasets, gets rid of rows containing missing values and formats 
+    the feature names. Please note that since there are no missing values in the training data, I 
+    have opted to remove all rows containing missing data.
     """
     dfs = load_wine_datasets_and_add_color_col(file_names)
     combined_df = pd.concat(dfs, ignore_index=True)

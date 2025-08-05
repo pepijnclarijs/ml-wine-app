@@ -37,8 +37,8 @@ def ensure_directory_exists(directory):
 @app.route("/predict", methods=["POST"])
 def make_prediction():
     """
-    This function makes a prediction based on the csv data delivered by the user. As the prediction might take some
-    time, it is being run on a different thread.
+    This function makes a prediction based on the csv data delivered by the user. As the prediction 
+    might take some time, it is being run on a different thread.
     """
 
     input_file = request.files.get('file')
