@@ -1,6 +1,5 @@
 import argparse
 import os
-import sys
 import tempfile
 import threading
 import uuid
@@ -95,4 +94,4 @@ if __name__ == "__main__":
     if args.local:
         app.run(debug=True)
     else:
-        app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=80, debug=True)
