@@ -64,7 +64,7 @@ jobs:
     - name: Deploy image to Azure Container App
       uses: azure/container-apps-deploy-action@v1
       with:
-        containerAppName: ${{ steps.vars.outputs.CONTAINER_APP_NAME }}
+        containerAppName: ${{ env.CONTAINER_APP_NAME }}
         resourceGroup: ${{ steps.vars.outputs.RESOURCE_GROUP_NAME }}
         imageToDeploy: docker.io/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.IMAGE_TAG }}
         registryUsername: ${{ secrets.DOCKER_USERNAME }}
