@@ -4,18 +4,63 @@ on:
   push:
     branches: [main]
 
-env:
-  IMAGE_NAME: app
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: prod
+      IMAGE_NAME: pepijnclarijs/wine-app
+      CONTAINER_APP_NAME: wine-quality-predictor
 
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Log in to Azure
-      uses: azure/login@v1
+    - name: Set environment-specific variables
+      id: vars
+      run: |
+        case "${{ env.ENVIRONMENT }}" in
+          dev)
+            echo "IMAGE_TAG=dev-latest" >> $GITHUB_OUTPUT
+            echo "RESOURCE_GROUP_NAME=wine-rg-dev" >> $GITHUB_OUTPUT
+            ;;
+          test)
+            echo "IMAGE_TAG=test-latest" >> $GITHUB_OUTPUT
+            echo "RESOURCE_GROUP_NAME=wine-rg-test" >> $GITHUB_OUTPUT
+            ;;
+          acc)
+            echo "IMAGE_TAG=acc-latest" >> $GITHUB_OUTPUT
+            echo "RESOURCE_GROUP_NAME=wine-rg-acc" >> $GITHUB_OUTPUT
+            ;;
+          prod)
+            echo "IMAGE_TAG=prod-latest" >> $GITHUB_OUTPUT
+            echo "RESOURCE_GROUP_NAME=wine-rg-prod" >> $GITHUB_OUTPUT
+            ;;
+          *)
+            echo "Invalid ENVIRONMENT value: ${{ env.ENVIRONMENT }}"
+            exit 1
+            ;;
+        esac
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Docker image to Docker Hub
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: docker.io/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.IMAGE_TAG }}
+
+    - name: Deploy image to Azure Container App
+      uses: azure/container-apps-deploy-action@v1
+      with:
+        containerAppName: ${{ steps.vars.outputs.CONTAINER_APP_NAME }}
+        resourceGroup: ${{ steps.vars.outputs.RESOURCE_GROUP_NAME }}
+        imageToDeploy: docker.io/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.IMAGE_TAG }}
+        registryUsername: ${{ secrets.DOCKERHUB_USERNAME }}
+        registryPassword: ${{ secrets.DOCKERHUB_TOKEN }}
