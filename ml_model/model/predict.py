@@ -77,6 +77,7 @@ def clean_validate_and_predict(context: TaskContext, file_path: str) -> dict:
 
     logging.info(f"Input data valid for task {context.task_id}. Making predictions.")
     results = make_predictions(context, valid_data)
+    logging.info(f"predictions made! {results}")
 
     # Ensure temporary file is deleted
     if os.path.exists(file_path):
