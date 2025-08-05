@@ -4,7 +4,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
-from feature_engine.imputation import AddMissingIndicator, CategoricalImputer, MeanMedianImputer
+from feature_engine.imputation import CategoricalImputer, MeanMedianImputer
 from sklearn.preprocessing import StandardScaler
 from ml_model.config.dynamic_config import config
 

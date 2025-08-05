@@ -1,3 +1,4 @@
+import logging
 import os
 import joblib
 from sklearn.pipeline import Pipeline
@@ -49,11 +50,14 @@ def load_pipeline() -> Pipeline:
     file_path = TRAINED_MODEL_DIR / file_name
 
     # Check if the file exists
+    logging.info(f"Checking if path ({file_path}) exists...")
     if not os.path.exists(file_path):
+        logging.info(f"Could not find path: {file_path}")
         raise FileNotFoundError(f"Pipeline file {file_path} does not exist.")
 
     # Load the pipeline
+    logging.info("Loading model from the given filepath")
     pipeline = joblib.load(file_path)
-    print(f"Pipeline loaded from {file_path}")
+    logging.info(f"Pipeline loaded from {file_path}")
 
     return pipeline

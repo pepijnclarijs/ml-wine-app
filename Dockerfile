@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /ML-wine-quality/
 
 # Document which ports the app will use.
-EXPOSE 5000
+EXPOSE 80
 
 # Run the application
 CMD ["python", "api/main.py"]

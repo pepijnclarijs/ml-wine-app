@@ -4,7 +4,7 @@ used to define the structure and validate the structure of the configuration dat
 from pathlib import Path
 from pydantic import BaseModel
 from strictyaml import YAML, load
-from typing import Dict, List, Optional, Sequence
+from typing import List, Optional, Sequence
 import ml_model
 
 
