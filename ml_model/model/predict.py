@@ -42,6 +42,11 @@ def predict(input_data: Union[pd.DataFrame, dict]) -> dict:
     return results
 
 
+# NOTE:
+# This TaskContext is defined as a standard @dataclass instead of a Pydantic model.
+# This is intentional: Pydantic models may copy or wrap mutable fields (like dicts and locks),
+# which breaks shared state between threads (e.g., updating task_results in main.py).
+# Using a dataclass ensures that all fields are passed by reference and updates are preserved.
 @dataclass
 class TaskContext:
     task_id: str

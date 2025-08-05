@@ -55,6 +55,7 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: docker.io/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.IMAGE_TAG }}
+        no-cache: true
 
     - name: Log in to Azure CLI
       uses: azure/login@v1
