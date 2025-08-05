@@ -5,6 +5,7 @@ BaseModel is used to define the structure and validate the structure of the conf
 
 from pathlib import Path
 from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 from strictyaml import YAML, load
 from typing import List, Optional, Sequence
 import ml_model
@@ -14,7 +15,7 @@ import ml_model
 PACKAGE_ROOT = Path(ml_model.__file__).resolve().parent
 ROOT = PACKAGE_ROOT.parent
 STATIC_CONFIG_FILE_PATH = PACKAGE_ROOT / "config" / "static_config.yml"
-DATASET_DIR = ROOT / "datasets"
+DATASET_DIR = ROOT / "ml_model" / "datasets"
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_models"
 
 
@@ -42,11 +43,20 @@ class MLModelConfig(BaseModel):
     n_estimators: int
 
 
+class SecretsConfig(BaseSettings):
+    ml_models_storage_connection_string: str
+
+    # NOTE: This is a pydantic convention. It's metadata used to configure pydantic behavior.
+    class Config:
+        env_prefix = ''  # disables default prefixing like 'SECRETS_' or similar
+
+
 class Config(BaseModel):
     """Class containing configurations for the application as well as the ML model."""
 
     app_config: AppConfig
     ml_model_config: MLModelConfig
+    secrets: SecretsConfig
 
 
 def validate_static_config_file_path() -> Path:
@@ -74,10 +84,13 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     if parsed_config is None:
         parsed_config = get_config_from_yaml()
 
+    secrets = SecretsConfig()  # reads env vars at initialization
+
     # specify the data attribute from the strictyaml YAML type.
     cfg = Config(
         app_config=AppConfig(**parsed_config.data),
         ml_model_config=MLModelConfig(**parsed_config.data),
+        secrets=secrets
     )
 
     return cfg

@@ -62,8 +62,9 @@ backend "azurerm" {
   key                  = "${var.env}.terraform.tfstate"
 }
 
-Furthermore, add these to your terraforms.tfvars file:
+Furthermore, put these in your terraforms.tfvars file:
 resource_group_name          = "$RESOURCE_GROUP"
 location                     = "$location"
+storage_account_name           = "$STORAGE_ACCOUNT"
 
 EOF

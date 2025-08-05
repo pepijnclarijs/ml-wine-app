@@ -47,6 +47,9 @@ variable "container_app_name" {
 variable "env" {
   type = string
 }
+variable "storage_account_name" {
+  type = string
+}
 
 # Create environment specific variables
 locals {
@@ -62,6 +65,18 @@ provider "azurerm" {
 }
 
 # Declare resources
+# Add blob container for holding the trained ML models
+data "azurerm_storage_account" "existing" {
+  name                = var.storage_account_name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_storage_container" "model_blob_container" {
+  name                  = "ml-models"
+  storage_account_id    = data.azurerm_storage_account.existing.id
+  container_access_type = "private"
+}
+
 resource "azurerm_log_analytics_workspace" "log" {
   name                = "${var.resource_group_name}-log"
   location            = var.location
@@ -83,7 +98,6 @@ resource "azurerm_container_app_environment" "aca_env" {
     minimum_count         = 0
     maximum_count         = 1
   }
-
 }
 
 resource "azurerm_container_app" "aca" {
@@ -122,6 +136,11 @@ resource "azurerm_container_app" "aca" {
       env {
         name  = "ENV"
         value = var.env
+      }
+
+      env {
+        name  = "ML_MODELS_STORAGE_CONNECTION_STRING"
+        value = data.azurerm_storage_account.existing.primary_connection_string
       }
     }
   }
