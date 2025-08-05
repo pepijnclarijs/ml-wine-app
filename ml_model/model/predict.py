@@ -17,15 +17,21 @@ logging.basicConfig(level=logging.INFO)
 def predict(input_data: Union[pd.DataFrame, dict]) -> dict:
     """Make prediction using a saved ML model given input data."""
 
+    logging.info("converting input data into pd dataframe...")
     # Convert input data to dataframe
     if not isinstance(input_data, pd.DataFrame):
         input_data = pd.DataFrame(input_data)
+    logging.info("converting input data into pd dataframe -- DONE")
 
     # Make predictions
+    logging.info("loading the pipeline...")
     pipeline = load_pipeline()
+    logging.info("loading the pipeline -- DONE")
+    logging.info("Making predictions...")
     predictions = pipeline.predict(
         X=input_data[config.ml_model_config.features]
     )
+    logging.info("Making predictions -- DONE")
 
     results = {
         "predictions": predictions.tolist(),
