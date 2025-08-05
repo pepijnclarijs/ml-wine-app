@@ -47,6 +47,11 @@ On Windows/Linux/MacOS:
 python -m api.main --local
 ```
 
+# TODO: Properly add these notes to the readme:
+How to deploy? Maybe add this to the setup script?
+Push placeholder docker image by logging in to docker desktop and running the push-placeholder script.
+Login to azure via the command line. Register Microsoft.App as a provider in azure by running: az provider register --namespace Microsoft.App. Also register Microsoft.OperationalInsights: az provider register --namespace Microsoft.OperationalInsights. Then run deployment/setup_tfstate.sh.
+
 # Example API
 When navigating to the local server: http://127.0.0.1:5000, you should see the frontend of the API as shown in the 
 image. ![Alt text](./images/example_api.png).
