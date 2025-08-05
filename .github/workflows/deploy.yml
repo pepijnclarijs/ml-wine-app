@@ -56,6 +56,11 @@ jobs:
         push: true
         tags: docker.io/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.IMAGE_TAG }}
 
+    - name: Log in to Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
     - name: Deploy image to Azure Container App
       uses: azure/container-apps-deploy-action@v1
       with:

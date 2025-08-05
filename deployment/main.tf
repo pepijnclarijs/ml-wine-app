@@ -50,9 +50,9 @@ variable "env" {
 
 # Create environment specific variables
 locals {
-  image_repository         = "wine-app"
-  image_tag                = "${var.env}-latest"
-  image_full               = "${var.docker_username}/${local.image_repository}:${local.image_tag}"
+  image_repository = "wine-app"
+  image_tag        = "${var.env}-latest"
+  image_full       = "${var.docker_username}/${local.image_repository}:${local.image_tag}"
 }
 
 # Declare provider
